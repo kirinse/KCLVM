@@ -4,10 +4,9 @@
 extern crate clap;
 use std::{path::Path};
 use clap::ArgMatches;
-use kclvm_compiler::libgen::libgen::DyLibGenerator;
 use kclvm_config::settings::{load_file, merge_settings, SettingsFile};
 use kclvm_parser::{load_program, parse_file};
-use kclvm_runner::command::Command;
+use kclvm_runner::{command::Command, libgen::DyLibGenerator};
 
 
 fn main() {
