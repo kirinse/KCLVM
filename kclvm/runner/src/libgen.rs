@@ -1,13 +1,14 @@
 use indexmap::IndexMap;
+use kclvm_compiler::codegen::EmitOptions;
+use kclvm_compiler::codegen::llvm::emit_code;
 use kclvm_config::cache::{CacheOption, load_pkg_cache, save_pkg_cache};
 use std::path::PathBuf;
 use std::thread;
 use std::{collections::HashMap, path::Path};
 use kclvm_ast::ast::*;
-use kclvm_runner::command::Command;
 use kclvm_sema::resolver::resolve_program;
-use crate::codegen::EmitOptions;
-use crate::codegen::llvm::emit_code;
+
+use crate::command::Command;
 
 const LL_FILE: &str = "_a.out";
 

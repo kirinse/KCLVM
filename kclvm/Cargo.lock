@@ -462,7 +462,6 @@ dependencies = [
  "ahash",
  "bit-set",
  "bitflags",
- "chrono",
  "fancy-regex",
  "fslock",
  "glob",
@@ -471,7 +470,6 @@ dependencies = [
  "kclvm-ast",
  "kclvm-config",
  "kclvm-error",
- "kclvm-runner",
  "kclvm-runtime",
  "kclvm-sema",
  "kclvm-version",
@@ -511,6 +509,15 @@ dependencies = [
  "termcolor",
  "termize",
  "tracing",
+]
+
+[[package]]
+name = "kclvm-fileutils"
+version = "0.1.0"
+dependencies = [
+ "kclvm-ast",
+ "serde_json",
+ "serde_yaml",
 ]
 
 [[package]]
@@ -559,11 +566,13 @@ dependencies = [
 name = "kclvm-runner"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "clap",
  "fslock",
  "glob",
  "indexmap",
  "kclvm-ast",
+ "kclvm-compiler",
  "kclvm-config",
  "kclvm-parser",
  "kclvm-runtime",
@@ -637,12 +646,14 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "clap",
+ "fancy-regex",
  "fslock",
  "indexmap",
  "kclvm-ast",
  "kclvm-compiler",
  "kclvm-config",
  "kclvm-error",
+ "kclvm-fileutils",
  "kclvm-parser",
  "kclvm-runner",
  "kclvm-sema",
