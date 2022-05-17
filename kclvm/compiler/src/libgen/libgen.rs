@@ -3,19 +3,18 @@ use kclvm_config::cache::{CacheOption, load_pkg_cache, save_pkg_cache};
 use std::path::PathBuf;
 use std::thread;
 use std::{collections::HashMap, path::Path};
-
 use kclvm_ast::ast::*;
 use kclvm_runner::command::Command;
 use kclvm_sema::resolver::resolve_program;
-
 use crate::codegen::EmitOptions;
 use crate::codegen::llvm::emit_code;
 
 const LL_FILE: &str = "_a.out";
+
 pub struct DyLibGenerator;
 
 impl DyLibGenerator{
-    fn gen_dylib_from_ast(&self, mut program: Program) -> Vec<String>{
+    pub fn gen_dylib_from_ast(mut program: Program) -> Vec<String>{
         let scope = resolve_program(&mut program);
         let path = std::path::Path::new(LL_FILE);
         if path.exists() {
