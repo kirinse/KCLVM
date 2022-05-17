@@ -4,6 +4,7 @@ pub mod ast;
 pub mod token;
 pub mod token_stream;
 pub mod walker;
+pub mod ast_utils;
 
 #[cfg(test)]
 mod tests;

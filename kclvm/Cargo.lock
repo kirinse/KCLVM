@@ -635,11 +635,21 @@ dependencies = [
 name = "kclvm-tools"
 version = "0.1.0"
 dependencies = [
- "fancy-regex",
+ "chrono",
+ "clap",
+ "fslock",
  "indexmap",
  "kclvm-ast",
+ "kclvm-compiler",
+ "kclvm-config",
  "kclvm-error",
  "kclvm-parser",
+ "kclvm-runner",
+ "kclvm-sema",
+ "kclvm-version",
+ "serde",
+ "serde_json",
+ "serde_yaml",
 ]
 
 [[package]]

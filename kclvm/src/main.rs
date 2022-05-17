@@ -37,7 +37,7 @@ fn main() {
             } else {
                 // load ast
                 let program = load_program(&files, None);
-                let dylib_paths = DyLibGenerator::gen_dylib_from_ast(program);
+                let dylib_paths = DyLibGenerator::gen_and_run_dylib_from_ast(program);
                 // let dylib_paths = dylib_gen.gen
                 let mut cmd = Command::new(0);
                 // link all dylibs

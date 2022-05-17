@@ -14,7 +14,7 @@ const LL_FILE: &str = "_a.out";
 pub struct DyLibGenerator;
 
 impl DyLibGenerator{
-    pub fn gen_dylib_from_ast(mut program: Program) -> Vec<String>{
+    pub fn gen_and_run_dylib_from_ast(mut program: Program) -> Vec<String>{
         let scope = resolve_program(&mut program);
         let path = std::path::Path::new(LL_FILE);
         if path.exists() {
