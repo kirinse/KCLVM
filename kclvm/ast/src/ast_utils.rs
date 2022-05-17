@@ -44,13 +44,7 @@ impl AstUtil {
         return stmts;
     }
 
-    pub fn build_assign_node(attr_name: Option<&str>, ast_node: NodeRef<Expr>) -> NodeRef<Stmt>{
-        
-        let attr_name = match attr_name{
-            Some(a_name) => {a_name}
-            None => {"value"}
-        };
-
+    pub fn build_assign_node(attr_name: &str, ast_node: NodeRef<Expr>) -> NodeRef<Stmt>{
         let iden = node_ref!(Identifier{
             names:vec![attr_name.to_string()],
             pkgpath: String::new(),

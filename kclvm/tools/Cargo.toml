@@ -23,3 +23,6 @@ kclvm-runner = {path = "../runner", version = "0.1.0"}
 kclvm-compiler = {path = "../compiler", version = "0.1.0"}
 kclvm-config = {path = "../config", version = "0.1.0"}
 kclvm-fileutils = {path = "../fileutils", version = "0.1.0"}
+
+[dev-dependencies]
+pretty_assertions = "1.2.1"

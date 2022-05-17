@@ -18,6 +18,11 @@ pub trait Validation<V>{
     fn validate(&self, schema_name: Option<&str>, attribute_name: Option<&str>, data_filepath_or_str: &str, kcl_path: Option<&str>, kcl_code: Option<String>) -> bool{
         let value= self.get_value(data_filepath_or_str);
         let ast_node = self.trans_data_to_ast(schema_name, &value);
+        let attribute_name = match attribute_name {
+            Some(attr_name) => attr_name,
+            None => "value",
+        };
+        println!("attrname: {}",attribute_name);
         let assign = AstUtil::build_assign_node(attribute_name, ast_node);
         let filename = match kcl_path{
             Some(s) => s,
@@ -38,6 +43,16 @@ pub struct JsonFileValidator{
     ast_module_eval: Evaluator
 }
 
+impl JsonFileValidator{
+    pub fn new() -> Self{
+        Self { 
+            json_parser: JsonParser{}, 
+            json_converter: JsonConverter{}, 
+            ast_module_eval: Evaluator{} 
+        }
+    }
+}
+
 impl Validation<serde_json::Value> for JsonFileValidator{
     fn trans_data_to_ast(&self, schema_name: Option<&str>, value: &serde_json::Value) -> NodeRef<Expr> {
         self.json_converter.convert_value_to_ast(schema_name, value, &self.json_parser)
@@ -56,6 +71,16 @@ pub struct JsonStrValidator{
     json_parser: JsonParser,
     json_converter: JsonConverter,
     ast_module_eval: Evaluator
+}
+
+impl JsonStrValidator{
+    pub fn new() -> Self{
+        Self { 
+            json_parser: JsonParser{}, 
+            json_converter: JsonConverter{}, 
+            ast_module_eval: Evaluator{} 
+        }
+    }
 }
 
 impl Validation<serde_json::Value> for JsonStrValidator{
@@ -79,6 +104,16 @@ pub struct YamlFileValidator{
     ast_module_eval: Evaluator
 }
 
+impl YamlFileValidator{
+    pub fn new() -> Self{
+        Self { 
+            yaml_parser: YamlParser{}, 
+            yaml_converter: YamlConverter{}, 
+            ast_module_eval: Evaluator{} 
+        }
+    }
+}
+
 impl Validation<serde_yaml::Value> for YamlFileValidator{
     fn trans_data_to_ast(&self, schema_name: Option<&str>, value: &serde_yaml::Value) -> NodeRef<Expr> {
         self.yaml_converter.convert_value_to_ast(schema_name, value, &self.yaml_parser)
@@ -97,6 +132,16 @@ pub struct YamlStrValidator{
     yaml_parser: YamlParser,
     yaml_converter: YamlConverter,
     ast_module_eval: Evaluator
+}
+
+impl YamlStrValidator{
+    pub fn new() -> Self{
+        Self { 
+            yaml_parser: YamlParser{}, 
+            yaml_converter: YamlConverter{}, 
+            ast_module_eval: Evaluator{} 
+        }
+    }
 }
 
 impl Validation<serde_yaml::Value> for YamlStrValidator{
