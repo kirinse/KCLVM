@@ -998,6 +998,32 @@ pub struct StringLit {
     pub value: String,
 }
 
+impl TryFrom<String> for StringLit {
+    type Error = &'static str;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        Ok(
+            Self{
+                value: quoted_string(&value),
+                raw_value: value,
+                is_long_string: false
+            }
+        )
+    }
+}
+
+fn quoted_string(value: &str) -> String {
+    let has_double_quote = value.contains('\'');
+    let has_single_quote = value.contains('\"');
+    if !has_single_quote {
+        format!("'{}'", value)
+    } else if !has_double_quote {
+        format!("\"{}\"", value)
+    } else {
+        format!("\"{}\"", value.replace("\"", "\\\""))
+    }
+}
+
 /// NameConstant, e.g.
 /// ```kcl
 /// True
@@ -1020,6 +1046,17 @@ impl NameConstant {
             NameConstant::False => "False",
             NameConstant::None => "None",
             NameConstant::Undefined => "Undefined",
+        }
+    }
+}
+
+impl TryFrom<bool> for NameConstant {
+    type Error = &'static str;
+
+    fn try_from(value: bool) -> Result<Self, Self::Error> {
+        match value {
+            true => Ok(NameConstant::True),
+            false => Ok(NameConstant::False),
         }
     }
 }
