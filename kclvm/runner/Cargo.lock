@@ -527,6 +527,7 @@ dependencies = [
 name = "kclvm-runner"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "clap",
  "fslock",
  "glob",
@@ -534,14 +535,17 @@ dependencies = [
  "kclvm-ast",
  "kclvm-compiler",
  "kclvm-config",
+ "kclvm-error",
  "kclvm-parser",
  "kclvm-runtime",
  "kclvm-sema",
+ "kclvm-tools",
  "kclvm-version",
  "libc",
  "libloading",
  "serde",
  "serde_json",
+ "threadpool",
  "walkdir",
 ]
 
@@ -598,6 +602,17 @@ dependencies = [
  "kclvm-macros",
  "rustc_span",
  "scoped-tls",
+]
+
+[[package]]
+name = "kclvm-tools"
+version = "0.1.0"
+dependencies = [
+ "fancy-regex",
+ "indexmap",
+ "kclvm-ast",
+ "kclvm-error",
+ "kclvm-parser",
 ]
 
 [[package]]
@@ -1388,6 +1403,15 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "threadpool"
+version = "1.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d050e60b33d41c19108b32cea32164033a9013fe3b46cbd4457559bfbf77afaa"
+dependencies = [
+ "num_cpus",
 ]
 
 [[package]]
