@@ -4,7 +4,7 @@ use std::{collections::HashMap, path::Path};
 use crate::{
     command::Command,
     libgen::DyLibGenerator,
-    runner::{ExecProgramArgs, KclvmRunner, KclvmRunnerOptions},
+    runner::ExecProgramArgs,
 };
 use kclvm_ast::ast::*;
 use kclvm_config::settings::SettingsFile;
