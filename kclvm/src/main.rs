@@ -3,10 +3,10 @@
 #[macro_use]
 extern crate clap;
 
-use kclvm_parser::parse_file;
-use kclvm_runner::eval::Evaluator;
 use clap::ArgMatches;
 use kclvm_config::settings::{load_file, merge_settings, SettingsFile};
+use kclvm_parser::parse_file;
+use kclvm_runner::eval::Evaluator;
 
 fn main() {
     let matches = clap_app!(kcl =>

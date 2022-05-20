@@ -10,7 +10,7 @@ pub extern "C" fn kclvm_cli_run(args: *const i8, plugin_agent: *const i8) -> *co
 
     let files = args.get_files();
     let opts = args.get_load_program_options();
-    
+
     // link all dylibs
     let dylib_path = Evaluator::new().eval_files_with_opts(files, opts, &args, plugin_agent);
 

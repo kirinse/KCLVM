@@ -1,14 +1,14 @@
 use indexmap::IndexMap;
-use kclvm_compiler::codegen::EmitOptions;
+use indexmap::IndexSet;
+use kclvm_ast::ast::*;
 use kclvm_compiler::codegen::llvm::emit_code;
-use kclvm_config::cache::{CacheOption, load_pkg_cache, save_pkg_cache};
+use kclvm_compiler::codegen::EmitOptions;
+use kclvm_config::cache::{load_pkg_cache, save_pkg_cache, CacheOption};
+use kclvm_error::Diagnostic;
+use kclvm_sema::resolver::resolve_program;
+use std::{collections::HashMap, path::Path};
 use std::{path::PathBuf, sync::mpsc::channel};
 use threadpool::ThreadPool;
-use std::{collections::HashMap, path::Path};
-use kclvm_ast::ast::*;
-use kclvm_sema::resolver::resolve_program;
-use indexmap::IndexSet;
-use kclvm_error::Diagnostic;
 
 use crate::command::Command;
 
@@ -16,8 +16,11 @@ const LL_FILE: &str = "_a.out";
 
 pub struct DyLibGenerator;
 
-impl DyLibGenerator{
-    pub fn gen_and_run_dylib_from_ast(mut program: Program, plugin_agent: u64) -> Result<Vec<String>, IndexSet<Diagnostic>>{
+impl DyLibGenerator {
+    pub fn gen_and_run_dylib_from_ast(
+        mut program: Program,
+        plugin_agent: u64,
+    ) -> Result<Vec<String>, IndexSet<Diagnostic>> {
         let scope = resolve_program(&mut program);
         let path = std::path::Path::new(LL_FILE);
         if path.exists() {
@@ -35,9 +38,9 @@ impl DyLibGenerator{
         }
 
         let cache_dir = Path::new(&program.root)
-        .join(".kclvm")
-        .join("cache")
-        .join(kclvm_version::get_full_version());
+            .join(".kclvm")
+            .join("cache")
+            .join(kclvm_version::get_full_version());
 
         if !cache_dir.exists() {
             std::fs::create_dir_all(&cache_dir).unwrap();
@@ -45,11 +48,7 @@ impl DyLibGenerator{
 
         let mut compile_progs: IndexMap<
             String,
-            (
-                Program,
-                IndexMap<String, IndexMap<String, String>>,
-                PathBuf,
-            ),
+            (Program, IndexMap<String, IndexMap<String, String>>, PathBuf),
         > = IndexMap::default();
 
         for (pkgpath, modules) in program.pkgs {
@@ -67,7 +66,7 @@ impl DyLibGenerator{
                 (compile_prog, scope.import_names.clone(), cache_dir.clone()),
             );
         }
-       
+
         let pool = ThreadPool::new(4);
         let (tx, rx) = channel();
         let prog_count = compile_progs.len();
@@ -84,7 +83,8 @@ impl DyLibGenerator{
                 let ll_file = file.to_str().unwrap();
                 let ll_path = format!("{}.ll", ll_file);
                 let dylib_path = format!("{}{}", ll_file, Command::get_lib_suffix());
-                let mut ll_path_lock = fslock::LockFile::open(&format!("{}.lock", ll_path)).unwrap();
+                let mut ll_path_lock =
+                    fslock::LockFile::open(&format!("{}.lock", ll_path)).unwrap();
                 ll_path_lock.lock().unwrap();
                 if Path::new(&ll_path).exists() {
                     std::fs::remove_file(&ll_path).unwrap();
@@ -128,8 +128,13 @@ impl DyLibGenerator{
                             let mut cmd = Command::new(plugin_agent);
                             let dylib_path = cmd.run_clang_single(&ll_path, &dylib_path);
                             let dylib_relative_path = dylib_path.replacen(root, ".", 1);
-    
-                            save_pkg_cache(root, &pkgpath, dylib_relative_path, CacheOption::default());
+
+                            save_pkg_cache(
+                                root,
+                                &pkgpath,
+                                dylib_relative_path,
+                                CacheOption::default(),
+                            );
                             dylib_path
                         }
                     }
@@ -144,10 +149,10 @@ impl DyLibGenerator{
         }
         let dylib_paths = rx.iter().take(prog_count).collect::<Vec<String>>();
 
-        if scope.diagnostics.len() > 0{
+        if scope.diagnostics.len() > 0 {
             scope.check_scope_diagnostics();
             Err(scope.diagnostics)
-        }else{
+        } else {
             Ok(dylib_paths)
         }
     }
