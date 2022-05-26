@@ -118,15 +118,14 @@ impl<'p, 'ctx> MutSelfTypedResultWalker<'ctx> for Printer<'p> {
         self.write_indentation(Indentation::Dedent);
         if !if_stmt.orelse.is_empty() {
             if let ast::Stmt::If(elif_stmt) = &if_stmt.orelse[0].node {
-                self.write("el");
+                self.fill("el");
                 self.walk_if_stmt(elif_stmt);
             } else {
-                self.write("else:");
-                self.write_newline();
+                self.fill("else:");
+                self.write_newline_without_fill();
                 self.write_indentation(Indentation::Indent);
                 self.stmts(&if_stmt.orelse);
                 self.write_indentation(Indentation::Dedent);
-                self.write_newline_without_fill();
             }
         } else {
             self.write_newline_without_fill();
@@ -348,7 +347,7 @@ impl<'p, 'ctx> MutSelfTypedResultWalker<'ctx> for Printer<'p> {
             self.write_space();
         }
         if let Some(value) = &schema_attr.value {
-            self.expr(&value);
+            self.expr(value);
         }
         self.write_newline_without_fill();
     }
@@ -363,6 +362,9 @@ impl<'p, 'ctx> MutSelfTypedResultWalker<'ctx> for Printer<'p> {
 
     fn walk_unary_expr(&mut self, unary_expr: &'ctx ast::UnaryExpr) -> Self::Result {
         self.write(unary_expr.op.symbol());
+        if matches!(unary_expr.op, ast::UnaryOp::Not) {
+            self.write_space();
+        }
         self.expr(&unary_expr.operand);
     }
 

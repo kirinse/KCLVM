@@ -19,20 +19,17 @@ pub fn apply_overrides(
         } else {
             &o.pkgpath
         };
-        match prog.pkgs.get_mut(pkgpath) {
-            Some(modules) => {
-                for m in modules.iter_mut() {
-                    if fix_module_override(m, o) {}
-                    // module_add_import_paths(m, import_paths)
-                }
+        if let Some(modules) = prog.pkgs.get_mut(pkgpath) {
+            for m in modules.iter_mut() {
+                if fix_module_override(m, o) {}
+                // module_add_import_paths(m, import_paths)
             }
-            None => {}
         }
     }
 }
 
 pub fn fix_module_override(m: &mut ast::Module, o: &ast::CmdOverrideSpec) -> bool {
-    let ss = o.field_path.split(".").collect::<Vec<&str>>();
+    let ss = o.field_path.split('.').collect::<Vec<&str>>();
     if ss.len() <= 1 {
         false
     } else {
@@ -40,7 +37,7 @@ pub fn fix_module_override(m: &mut ast::Module, o: &ast::CmdOverrideSpec) -> boo
         let field = ss[1..].join(".");
         let value = &o.field_value;
         let key = ast::Identifier {
-            names: field.split(".").map(|s| s.to_string()).collect(),
+            names: field.split('.').map(|s| s.to_string()).collect(),
             ctx: ast::ExprContext::Store,
             pkgpath: "".to_string(),
         };
@@ -59,9 +56,9 @@ pub fn fix_module_override(m: &mut ast::Module, o: &ast::CmdOverrideSpec) -> boo
     }
 }
 
+#[inline]
 pub fn build_node_from_string(value: &str) -> ast::NodeRef<ast::Expr> {
-    let expr = parse_expr(value);
-    expr
+    parse_expr(value)
 }
 
 pub struct OverrideTransformer {
@@ -160,7 +157,7 @@ impl OverrideTransformer {
         for entry in config.items.iter_mut() {
             let (mut _paths, mut _paths_with_id) = self._get_key_value_paths(&mut entry.node);
             paths.append(&mut _paths);
-            paths_with_id.append(&mut &mut _paths_with_id);
+            paths_with_id.append(&mut _paths_with_id);
         }
         (paths, paths_with_id)
     }
