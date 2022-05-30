@@ -107,7 +107,7 @@ pub struct LoadProgramOptions {
     pub k_code_list: Vec<String>,
 
     pub cmd_args: Vec<ast::CmdArgSpec>,
-    pub cmd_overrides: Vec<ast::CmdOverrideSpec>,
+    pub cmd_overrides: Vec<ast::OverrideSpec>,
 
     pub _mode: Option<ParseMode>,
     pub _load_packages: bool,

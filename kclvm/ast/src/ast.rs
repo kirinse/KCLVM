@@ -181,7 +181,7 @@ pub struct CmdArgSpec {
 
 /// KCL command line override spec, e.g. `kcl main.k -O pkgpath:path.to.field=field_value`
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct CmdOverrideSpec {
+pub struct OverrideSpec {
     pub pkgpath: String,
     pub field_path: String,
     pub field_value: String,
@@ -201,7 +201,7 @@ pub struct Program {
     pub main: String,
     pub pkgs: HashMap<String, Vec<Module>>,
     pub cmd_args: Vec<CmdArgSpec>,
-    pub cmd_overrides: Vec<CmdOverrideSpec>,
+    pub cmd_overrides: Vec<OverrideSpec>,
 }
 
 impl Program {
