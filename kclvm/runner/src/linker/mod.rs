@@ -25,7 +25,7 @@ pub fn wasm_linker(args: &[CString]) -> bool {
 pub fn darwin_linker(args: &[CString]) -> bool {
     let mut command_line: Vec<*const libc::c_char> = Vec::with_capacity(args.len() + 1);
 
-    let executable_name = CString::new("wasm-ld").unwrap();
+    let executable_name = CString::new("lld").unwrap();
 
     command_line.push(executable_name.as_ptr());
 
@@ -53,7 +53,7 @@ pub fn darwin_new_linker(args: &[CString]) -> bool {
 pub fn linux_linker(args: &[CString]) -> bool {
     let mut command_line: Vec<*const libc::c_char> = Vec::with_capacity(args.len() + 1);
 
-    let executable_name = CString::new("wasm-ld").unwrap();
+    let executable_name = CString::new("lld").unwrap();
 
     command_line.push(executable_name.as_ptr());
 
@@ -67,7 +67,7 @@ pub fn linux_linker(args: &[CString]) -> bool {
 pub fn mingw_linker(args: &[CString]) -> bool {
     let mut command_line: Vec<*const libc::c_char> = Vec::with_capacity(args.len() + 1);
 
-    let executable_name = CString::new("wasm-ld").unwrap();
+    let executable_name = CString::new("lld").unwrap();
 
     command_line.push(executable_name.as_ptr());
 

@@ -16,7 +16,7 @@ impl Command {
     pub fn new(plugin_method_ptr: u64) -> Self {
         let executable_root = Self::get_executable_root();
         let rust_libstd_dylib = Self::get_rust_libstd_dylib(executable_root.as_str());
-        let clang_path = Self::get_clang_path();
+        let clang_path = "".to_string();
 
         Self {
             clang_path,
@@ -209,22 +209,17 @@ impl Command {
         }
 
         let mut args: Vec<String> = vec![
-            "-Wno-override-module".to_string(),
-            "-Wno-error=unused-command-line-argument".to_string(),
-            "-Wno-unused-command-line-argument".to_string(),
-            "-shared".to_string(),
             "-undefined".to_string(),
             "dynamic_lookup".to_string(),
-            format!("-Wl,-rpath,{}/lib", self.executable_root),
+            // format!("-Wl,-rpath,{}/lib", self.executable_root),
             format!("-L{}/lib", self.executable_root),
             "-lkclvm_native_shared".to_string(),
-            format!("-I{}/include", self.executable_root),
+            // format!("-I{}/include", self.executable_root),
         ];
         let mut bc_files = dylibs.to_owned();
         args.append(&mut bc_files);
         let mut more_args = vec![
             self.rust_libstd_dylib.clone(),
-            "-fPIC".to_string(),
             "-o".to_string(),
             dylib_path.to_string(),
         ];
@@ -236,12 +231,6 @@ impl Command {
         }
         crate::linker::darwin_linker(&cargs);
 
-        //std::process::Command::new(self.clang_path.clone())
-        //    .stdout(std::process::Stdio::inherit())
-        //    .stderr(std::process::Stdio::inherit())
-        //    .args(&args)
-        //    .output()
-        //    .expect("clang failed");
 
         dylib_path
     }
@@ -284,32 +273,26 @@ impl Command {
         }
 
         let mut args: Vec<String> = vec![
-            "-Wno-override-module".to_string(),
-            "-Wno-error=unused-command-line-argument".to_string(),
-            "-Wno-unused-command-line-argument".to_string(),
-            "-shared".to_string(),
             "-undefined".to_string(),
             "dynamic_lookup".to_string(),
-            format!("-Wl,-rpath,{}/lib", self.executable_root),
+            // format!("-Wl,-rpath,{}/lib", self.executable_root),
             format!("-L{}/lib", self.executable_root),
             "-lkclvm_native_shared".to_string(),
-            format!("-I{}/include", self.executable_root),
+            // format!("-I{}/include", self.executable_root),
         ];
         args.append(&mut bc_files);
         let mut more_args = vec![
             self.rust_libstd_dylib.clone(),
-            "-fPIC".to_string(),
             "-o".to_string(),
             dylib_path.to_string(),
         ];
         args.append(&mut more_args);
 
-        std::process::Command::new(self.clang_path.clone())
-            .stdout(std::process::Stdio::inherit())
-            .stderr(std::process::Stdio::inherit())
-            .args(&args)
-            .output()
-            .expect("clang failed");
+        let mut cargs = Vec::new();
+        for x in &args {
+            cargs.push(std::ffi::CString::new(x.as_str()).unwrap());
+        }
+        crate::linker::darwin_linker(&cargs);
 
         dylib_path
     }
@@ -335,13 +318,9 @@ impl Command {
         }
 
         let mut args: Vec<String> = vec![
-            "-Wno-override-module".to_string(),
-            "-Wno-error=unused-command-line-argument".to_string(),
-            "-Wno-unused-command-line-argument".to_string(),
-            "-shared".to_string(),
             "-undefined".to_string(),
             "dynamic_lookup".to_string(),
-            format!("-Wl,-rpath,{}/lib", self.executable_root),
+            // format!("-Wl,-rpath,{}/lib", self.executable_root),
             format!("-L{}/lib", self.executable_root),
             "-lkclvm_native_shared".to_string(),
             format!("-I{}/include", self.executable_root),
@@ -350,18 +329,17 @@ impl Command {
         args.append(&mut bc_files);
         let mut more_args = vec![
             self.rust_libstd_dylib.clone(),
-            "-fPIC".to_string(),
             "-o".to_string(),
             dylib_path.to_string(),
         ];
         args.append(&mut more_args);
 
-        std::process::Command::new(self.clang_path.clone())
-            .stdout(std::process::Stdio::inherit())
-            .stderr(std::process::Stdio::inherit())
-            .args(&args)
-            .output()
-            .expect("clang failed");
+        let mut cargs = Vec::new();
+        for x in &args {
+            cargs.push(std::ffi::CString::new(x.as_str()).unwrap());
+        }
+        crate::linker::darwin_linker(&cargs);
+
         // Use absolute path.
         let path = PathBuf::from(&dylib_path).canonicalize().unwrap();
         path.to_str().unwrap().to_string()
@@ -394,47 +372,6 @@ impl Command {
         let rust_libstd_name = std::fs::read_to_string(txt_path).unwrap();
         let rust_libstd_name = rust_libstd_name.trim();
         format!("{}/lib/{}", executable_root, rust_libstd_name)
-    }
-
-    fn get_clang_path() -> String {
-        // ${KCLVM_CLANG}
-        let env_kclvm_clang = env::var("KCLVM_CLANG");
-        if let Ok(clang_path) = env_kclvm_clang {
-            if !clang_path.is_empty() {
-                if Self::is_windows() {
-                    return format!("{}.exe", clang_path);
-                } else {
-                    return clang_path;
-                }
-            }
-        }
-
-        // {root}/tools/clang/bin/clang
-        let executable_root = Self::get_executable_root();
-        let clang_path = std::path::Path::new(&executable_root)
-            .join("tools")
-            .join("clang")
-            .join("bin")
-            .join(if Self::is_windows() {
-                "clang.exe"
-            } else {
-                "clang"
-            });
-        if clang_path.exists() {
-            return clang_path.to_str().unwrap().to_string();
-        }
-
-        let clang_exe = if Self::is_windows() {
-            "clang.exe"
-        } else {
-            "clang"
-        };
-
-        if let Some(s) = Self::find_it(clang_exe) {
-            return s.to_str().unwrap().to_string();
-        }
-
-        panic!("get_clang_path failed")
     }
 
     pub fn get_lib_suffix() -> String {
