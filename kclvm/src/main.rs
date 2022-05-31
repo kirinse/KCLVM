@@ -17,7 +17,15 @@ use kclvm_parser::{load_program, parse_file};
 use kclvm_runner::command::Command;
 use kclvm_sema::resolver::resolve_program;
 
+pub mod linker;
+//use kclvm::ClangMain;
+
 fn main() {
+    println!("rust main");
+    linker::clang_main_foo();
+}
+
+fn main_ignored() {
     let matches = clap_app!(kcl =>
         (@subcommand run =>
             (@arg INPUT: ... "Sets the input file to use")
