@@ -1,7 +1,5 @@
 extern crate serde;
 
-pub mod linker;
-
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::sync::mpsc::channel;

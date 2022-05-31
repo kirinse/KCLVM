@@ -4,6 +4,7 @@
 extern crate clap;
 
 use indexmap::IndexMap;
+use std::ffi::CString;
 use std::path::PathBuf;
 use std::thread;
 use std::{collections::HashMap, path::Path};
@@ -16,13 +17,11 @@ use kclvm_config::settings::{load_file, merge_settings, SettingsFile};
 use kclvm_parser::{load_program, parse_file};
 use kclvm_runner::command::Command;
 use kclvm_sema::resolver::resolve_program;
-
-pub mod linker;
-//use kclvm::ClangMain;
+use kclvm_runner::linker;
 
 fn main() {
     println!("rust main");
-    linker::clang_main_foo();
+    linker::wasm_linker(&[CString::new("-O3").unwrap()]);
 }
 
 fn main_ignored() {

@@ -12,7 +12,7 @@ fn main() {
 
         let mut build = cc::Build::new();
 
-        build.file("runner/src/linker/linker.cpp").cpp(true);
+        build.file("src/linker/linker.cpp").cpp(true);
 
         if !cfg!(target_os = "windows") {
             build.flag("-Wno-unused-parameter");
