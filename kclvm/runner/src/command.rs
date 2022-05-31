@@ -230,12 +230,18 @@ impl Command {
         ];
         args.append(&mut more_args);
 
-        std::process::Command::new(self.clang_path.clone())
-            .stdout(std::process::Stdio::inherit())
-            .stderr(std::process::Stdio::inherit())
-            .args(&args)
-            .output()
-            .expect("clang failed");
+        let mut cargs = Vec::new();
+        for x in &args {
+            cargs.push(std::ffi::CString::new(x.as_str()).unwrap());
+        }
+        crate::linker::darwin_linker(&cargs);
+
+        //std::process::Command::new(self.clang_path.clone())
+        //    .stdout(std::process::Stdio::inherit())
+        //    .stderr(std::process::Stdio::inherit())
+        //    .args(&args)
+        //    .output()
+        //    .expect("clang failed");
 
         dylib_path
     }
@@ -423,7 +429,6 @@ impl Command {
         } else {
             "clang"
         };
-        
 
         if let Some(s) = Self::find_it(clang_exe) {
             return s.to_str().unwrap().to_string();

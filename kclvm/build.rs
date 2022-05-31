@@ -32,19 +32,22 @@ fn main() {
         let libdir = String::from_utf8(libdir.stdout).unwrap();
 
         println!("cargo:rustc-link-search={}", libdir);
-        for lib in &["lldELF", "lldDriver", "lldCore", "lldCommon", "lldWasm"
-        
-            // lldCOFF
-            // lldCommon
-            // lldCore
-            // lldDriver
-            // lldELF
-            // lldMachO
-            // lldMachO2
-            // lldMinGW
-            // lldReaderWriter
-            // lldWasm
-            // lldYAML
+        for lib in &[
+            "lldELF",
+            "lldDriver",
+            "lldCore",
+            "lldCommon",
+            "lldWasm", // lldCOFF
+                       // lldCommon
+                       // lldCore
+                       // lldDriver
+                       // lldELF
+                       // lldMachO
+                       // lldMachO2
+                       // lldMinGW
+                       // lldReaderWriter
+                       // lldWasm
+                       // lldYAML
         ] {
             //println!("aaaa===={}", lib);
             //println!("cargo:rustc-link-lib={}", lib);

@@ -16,15 +16,15 @@ use kclvm_config::cache::*;
 use kclvm_config::settings::{load_file, merge_settings, SettingsFile};
 use kclvm_parser::{load_program, parse_file};
 use kclvm_runner::command::Command;
-use kclvm_sema::resolver::resolve_program;
 use kclvm_runner::linker;
+use kclvm_sema::resolver::resolve_program;
 
-fn main() {
+fn main_ignored() {
     println!("rust main");
     linker::wasm_linker(&[CString::new("-O3").unwrap()]);
 }
 
-fn main_ignored() {
+fn main() {
     let matches = clap_app!(kcl =>
         (@subcommand run =>
             (@arg INPUT: ... "Sets the input file to use")
