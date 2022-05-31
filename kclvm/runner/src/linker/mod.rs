@@ -1,4 +1,8 @@
 use std::ffi::CString;
+use once_cell::sync::Lazy;
+use std::sync::Mutex;
+
+static LINKER_MUTEX: Lazy<Mutex<i32>> = Lazy::new(|| Mutex::new(0i32));
 
 extern "C" {
     fn LLDWasmLink(args: *const *const libc::c_char, size: libc::size_t) -> libc::c_int;
@@ -23,6 +27,7 @@ pub fn wasm_linker(args: &[CString]) -> bool {
 }
 
 pub fn darwin_linker(args: &[CString]) -> bool {
+    let _lock = LINKER_MUTEX.lock().unwrap();
     let mut command_line: Vec<*const libc::c_char> = Vec::with_capacity(args.len() + 1);
 
     let executable_name = CString::new("lld").unwrap();

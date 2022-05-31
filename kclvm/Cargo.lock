@@ -574,6 +574,7 @@ dependencies = [
  "kclvm-version",
  "libc",
  "libloading",
+ "once_cell",
  "serde",
  "serde_json",
  "walkdir",

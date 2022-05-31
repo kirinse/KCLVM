@@ -215,6 +215,8 @@ impl Command {
             format!("-L{}/lib", self.executable_root),
             "-lkclvm_native_shared".to_string(),
             // format!("-I{}/include", self.executable_root),
+            "-arch".to_string(),
+            "x86_64".to_string(),
         ];
         let mut bc_files = dylibs.to_owned();
         args.append(&mut bc_files);
@@ -279,6 +281,8 @@ impl Command {
             format!("-L{}/lib", self.executable_root),
             "-lkclvm_native_shared".to_string(),
             // format!("-I{}/include", self.executable_root),
+            "-arch".to_string(),
+            "x86_64".to_string(),
         ];
         args.append(&mut bc_files);
         let mut more_args = vec![
@@ -323,7 +327,9 @@ impl Command {
             // format!("-Wl,-rpath,{}/lib", self.executable_root),
             format!("-L{}/lib", self.executable_root),
             "-lkclvm_native_shared".to_string(),
-            format!("-I{}/include", self.executable_root),
+            // format!("-I{}/include", self.executable_root),
+            "-arch".to_string(),
+            "x86_64".to_string(),
         ];
         let mut bc_files = vec![bc_path];
         args.append(&mut bc_files);

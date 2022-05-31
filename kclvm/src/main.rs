@@ -19,11 +19,6 @@ use kclvm_runner::command::Command;
 use kclvm_runner::linker;
 use kclvm_sema::resolver::resolve_program;
 
-fn main_ignored() {
-    println!("rust main");
-    linker::wasm_linker(&[CString::new("-O3").unwrap()]);
-}
-
 fn main() {
     let matches = clap_app!(kcl =>
         (@subcommand run =>
