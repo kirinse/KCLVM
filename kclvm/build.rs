@@ -17,13 +17,12 @@ fn main() {
         if !cfg!(target_os = "windows") {
             build.flag("-Wno-unused-parameter");
         }
-        build.flag("-std=c++14");
 
         for flag in cxxflags.split_whitespace() {
             build.flag(flag);
         }
 
-        build.compile("kclvm_clang");
+        build.compile("linker");
 
         // add the llvm linker
         let libdir = Command::new("llvm-config")
@@ -54,6 +53,4 @@ fn main() {
     // stack, which is not big enough for debug builds
     #[cfg(windows)]
     println!("cargo:rustc-link-arg=/STACK:8388608");
-
-    println!("cargo:rerun-if-changed=src/linker/linker.cpp");
 }

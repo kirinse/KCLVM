@@ -36,3 +36,9 @@ int lldMain_wasm(int argc, const char **argv) {
 	return !lld::wasm::link(args, false, llvm::outs(), llvm::errs());
 }
 
+extern "C" bool LLDWasmLink(const char *argv[], size_t length)
+{
+	llvm::ArrayRef<const char *> args(argv, length);
+
+	return lld::wasm::link(args, false, llvm::outs(), llvm::errs());
+}
