@@ -45,27 +45,16 @@ pub fn link(input: &[u8], name: &str, export_names: &[String], target: Target) -
     }
 }
 
-//#[link(name = "linker")]
+#[link(name = "linker")]
 extern "C" {
     //fn lldMain_gnu(args: *const *const libc::c_char, size: libc::size_t) -> libc::c_int;
     //fn lldMain_gnu_pe(args: *const *const libc::c_char, size: libc::size_t) -> libc::c_int;
     //fn lldMain_darwin(args: *const *const libc::c_char, size: libc::size_t) -> libc::c_int;
-    //fn lldMain_darwin_new(args: *const *const libc::c_char, size: libc::size_t) -> libc::c_int;
 
     //fn lldMain_darwin_new(argc: libc::c_int, args: *const *const libc::c_char) -> libc::c_int;
-
-    fn lldMain_wasm(argc: libc::c_int, args: *const *const libc::c_char) -> libc::c_int;
+    pub fn lldMain_wasm      (argc: libc::c_int, args: *const *const libc::c_char) -> libc::c_int;
 }
 
-/*
-lldMain_gnu
-
-lldMain_gnu_pe
-lldMain_darwin
-lldMain_darwin_new
-lldMain_wasm
-
-*/
 
 pub fn clang_main_foo() {
     println!("clang_main_foo");
@@ -85,8 +74,9 @@ pub fn clang_main(args: &[CString]) -> bool {
         command_line.push(arg.as_ptr());
     }
 
-   // unsafe { lldMain_wasm(command_line.as_ptr(), command_line.len()) == 0 }
-   false
+    //unsafe { lldMain_darwin_new(command_line.len() as i32, command_line.as_ptr()) == 0 }
+    unsafe { lldMain_wasm(command_line.len() as i32, command_line.as_ptr()) == 0 }
+  // false
 }
 
 pub fn wasm_linker(args: &[CString]) -> bool {

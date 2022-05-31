@@ -22,16 +22,16 @@ int lldMain_darwin(int argc, const char **argv) {
 	std::vector<const char *> args(argv, argv + argc);
 	return !lld::mach_o::link(args, false, llvm::outs(), llvm::errs());
 }
+*/
 
 extern "C"
 int lldMain_darwin_new(int argc, const char **argv) {
 	std::vector<const char *> args(argv, argv + argc);
-	return !lld::macho::link(args, false, llvm::outs(), llvm::errs());
+	//return !lld::macho::link(args, false, llvm::outs(), llvm::errs());
+    return 0;
 }
-*/
 
-extern "C"
-int lldMain_wasm(int argc, const char **argv) {
+extern "C" int lldMain_wasm(int argc, const char **argv) {
 	std::vector<const char *> args(argv, argv + argc);
 	return !lld::wasm::link(args, false, llvm::outs(), llvm::errs());
 }
